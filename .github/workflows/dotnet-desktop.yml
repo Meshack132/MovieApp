@@ -15,10 +15,10 @@ jobs:
     runs-on: windows-latest
 
     env:
-      Solution_Name: your-solution-name                        # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: your-test-project-path                # Replace with the path to your test project, i.e. MyWpfApp.Tests/MyWpfApp.Tests.csproj.
-      Wap_Project_Directory: your-wap-project-directory        # Replace with the Wap project directory relative to the solution.
-      Wap_Project_Path: your-wap-project-path                  # Replace with the path to your Wap project.
+      Solution_Name: YourSolutionName.sln                       # Replace with your solution file name (e.g., MyApp.sln)
+      Test_Project_Path: YourTestProject/MyApp.Tests.csproj     # Replace with the path to your test project
+      Wap_Project_Directory: YourApp.Package                    # Replace with your WAP project directory
+      Wap_Project_Path: YourApp.Package/YourApp.Package.wapproj # Replace with the path to your WAP project
 
     steps:
     - name: Checkout the repository
@@ -50,11 +50,11 @@ jobs:
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
     - name: Package the Application
-      run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:AppxBundle=Always /p:PackageCertificateKeyFile=$env:Wap_Project_Directory\GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+      run: msbuild $env:Wap_Project_Path /p:Configuration=${{ matrix.configuration }} /p:AppxBundle=Always /p:PackageCertificateKeyFile=$certificatePath /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
 
     - name: Remove the Signing Certificate
       if: secrets.Base64_Encoded_Pfx != ''
-      run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
+      run: Remove-Item -path $certificatePath
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3
