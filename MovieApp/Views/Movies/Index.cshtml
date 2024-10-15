@@ -1,0 +1,34 @@
+@model IEnumerable<MovieApp.Models.Movie>
+
+<h1 style="text-align: center; color: white; background-color: #4CAF50; padding: 15px;">Movies</h1>
+
+<table class="table" style="width: 100%; margin: auto; border-collapse: collapse; background-color: #f9f9f9; border: 1px solid #ddd;">
+    <thead>
+        <tr style="background-color: #4CAF50; color: white;">
+            <th style="padding: 12px; text-align: left;">ID</th>
+            <th style="padding: 12px; text-align: left;">Title</th>
+            <th style="padding: 12px; text-align: left;">Genre</th>
+            <th style="padding: 12px; text-align: left;">Release Date</th>
+            <th style="padding: 12px; text-align: left;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 8px;">@movie.Id</td>
+                <td style="padding: 8px;">@movie.Title</td>
+                <td style="padding: 8px;">@movie.Genre</td>
+                <td style="padding: 8px;">@movie.ReleaseDate.ToShortDateString()</td>
+                <td style="padding: 8px;">
+                    <a asp-action="Edit" asp-route-id="@movie.Id" style="color: #007BFF;">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@movie.Id" style="color: red;">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div style="margin-top: 20px; text-align: center;">
+    <a asp-action="Create" style="color: white; background-color: #4CAF50; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Create New</a>
+</div>
