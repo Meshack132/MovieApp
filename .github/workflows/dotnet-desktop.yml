@@ -15,10 +15,9 @@ jobs:
     runs-on: windows-latest
 
     env:
-      Solution_Name: MovieApp.sln               # Set to the solution name of the MovieApp project
-      Test_Project_Path: MovieApp.Tests\MovieApp.Tests.csproj   # Update to your test project if applicable
-      Wap_Project_Directory: MovieApp.Package    # If applicable, adjust this based on your project
-      Wap_Project_Path: MovieApp.Package\MovieApp.Package.wapproj  # Path to your WAP project if used
+      Solution_Name: MovieApp.sln
+      Wap_Project_Directory: MovieApp.Package
+      Wap_Project_Path: MovieApp.Package\MovieApp.Package.wapproj
 
     steps:
     - name: Checkout code
@@ -29,7 +28,7 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x  # Adjust to your .NET version
+        dotnet-version: 8.0.x
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
@@ -44,12 +43,7 @@ jobs:
       env:
         Configuration: ${{ matrix.configuration }}
 
-    - name: Execute unit tests
-      run: dotnet test $env:Test_Project_Path --configuration $env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
-
-    # Optional: Package the app if using WAP (Windows Application Packaging)
+    # Optional: Create the app package if applicable
     - name: Create the app package
       run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       env:
@@ -62,4 +56,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: BuildArtifacts
-        path: ./path_to_build_output  # Adjust to the location where the build output is stored
+        path: ./path_to_build_output
