@@ -34,12 +34,15 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Restore dependencies
-      run: dotnet restore $env:Project_Path --configuration $env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+      run: dotnet restore $env:Project_Path
 
     - name: Build the project
       run: dotnet build $env:Project_Path --configuration $env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
+
+    - name: Execute unit tests
+      run: dotnet test $env:Project_Path --configuration $env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
 
